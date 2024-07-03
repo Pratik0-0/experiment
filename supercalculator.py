@@ -1,109 +1,82 @@
 import tkinter as tk
 import math
 
-def __init__(self, master):
-        self.master = master
-        master.title("Calculator")
-        master.geometry("1600x900")
+def button_click(value):  #here entry is the value that will be get defined in the lstr
+    current = entry.get() #.get takes the value from the entry
+    entry.delete(0, tk.END) #Tk.end is used to remove the characters
+    entry.insert(tk.END, current + str(value)) #to run the function
 
-        self.total = tk.StringVar()
 
-        self.entry = tk.Entry(master, textvariable=self.total, font=("Helvetica", 20))
-        self.entry.grid(row=0, column=0, columnspan=5, pady=5)
+def clear_entry():
+    entry.delete(0, tk.END)
 
-        self.create_buttons()
+def evaluate():
+    try:
+        expression = entry.get()
+        result = eval(expression)
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, str(result))
+    except Exception as e:
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, "Error")
 
-def create_buttons(self):
-        button_list = [
-            ['sin', 'cos', 'tan', '^2', '10^x'],
-            ['7', '8', '9', '/', 'log(x)'],
-            ['4', '5', '6', '*', '1/x'],
-            ['1', '2', '3', '-', 'x!'],
-            ['0', 'C', '=', '+', 'sqrt']
-        ]
+def apply_sqrt():
+    current = entry.get()
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, str(math.sqrt(float(current))))
 
-        for i, row in enumerate(button_list):
-            for j, button_text in enumerate(row):
-                button = tk.Button(
-                    self.master, text=button_text, width=5, height=3, font=("Helvetica", 20),
-                    command=lambda text=button_text: self.click(text)
-                )
-                button.grid(row=i + 1, column=j, sticky="nsew")
-            self.master.rowconfigure(i + 1, weight=1)
-        self.master.columnconfigure(0, weight=1)
-        self.master.columnconfigure(1, weight=1)
-        self.master.columnconfigure(2, weight=1)
-        self.master.columnconfigure(3, weight=1)
-        self.master.columnconfigure(4, weight=1)
+def apply_sin():
+    current = entry.get()
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, str(math.sin(math.radians(float(current)))))
 
-def click(self, button_text):
-        if button_text == '=':
-            try:
-                result = eval(self.entry.get())
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == 'C':
-            self.total.set("")
-        elif button_text == 'sin':
-            try:
-                result = math.sin(math.radians(float(self.entry.get())))
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == 'cos':
-            try:
-                result = math.cos(math.radians(float(self.entry.get())))
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == 'tan':
-            try:
-                result = math.tan(math.radians(float(self.entry.get())))
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == '^2':
-            try:
-                
-                result = float(self.entry.get()) ** 2
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == 'log(x)':
-            try:
-                result = math.log(float(self.entry.get()))
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == '1/x':
-            try:
-                result = 1 / float(self.entry.get())
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == 'x!':
-            try:
-                result = math.factorial(int(self.entry.get()))
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == '10^x':
-            try:
-                result = 10 ** float(self.entry.get())
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        elif button_text == 'sqrt':
-            try:
-                result = math.sqrt(float(self.entry.get()))
-                self.total.set(result)
-            except:
-                self.total.set("Error")
-        else:
-            self.total.set(self.entry.get() + button_text)
+def apply_cos():
+    current = entry.get()
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, str(math.cos(math.radians(float(current)))))
 
-if __name__ == '__main__':
-    root = tk.Tk()
-    my_calculator = Calculator(root)
-    root.mainloop()
+def apply_tan():
+    current = entry.get()
+    entry.delete(0, tk.END)
+    entry.insert(tk.END, str(math.tan(math.radians(float(current)))))
+
+# Main window
+root = tk.Tk() #here root window and root object is themain windows of GUI of the tkinter
+root.title("Scientific Calculator") #titiel will be get seen 
+root.geometry("600x900")   # window Dimensions
+root.config(bg="#2c3e50")  # Backgorund colour of the calculator
+
+entry = tk.Entry(root, width=20, font=('Arial', 20), justify=tk.RIGHT, bd=10)
+entry.grid(row=0, column=0, columnspan=6, padx=10, pady=10, ipady=20)  
+button_params = {'font': ('Arial', 14), 'padx': 20, 'pady': 20, 'bg': "#3498db", 'fg': "#ecf0f1"}
+
+buttons = [
+    '7', '8', '9', '/',
+    '4', '5', '6', '*',
+    '1', '2', '3', '-',
+    '0', '.', '=', '+',
+    '(', ')', 'C', '⌫',
+    'sin', 'cos', 'tan', 'sqrt'
+]
+
+row_val = 1
+col_val = 0
+
+for button in buttons:
+    tk.Button(
+        root, text=button,
+        command=lambda b=button: button_click(b) if b not in {'=', 'sin', 'cos', 'tan', 'sqrt', 'C', '⌫'} else evaluate() if b == '=' else apply_sqrt() if b == 'sqrt' else apply_sin() if b == 'sin' else apply_cos() if b == 'cos' else apply_tan() if b == 'tan' else clear_entry() if b == 'C' else backspace(),
+        **button_params
+    ).grid(row=row_val, column=col_val, sticky="nsew") 
+    col_val += 1 
+    if col_val > 3:
+        col_val = 0
+        row_val += 1
+
+for i in range(1, 6):
+    root.grid_rowconfigure(i, weight=1)
+    root.grid_columnconfigure(i, weight=1)
+
+# Main loop
+root.mainloop()
+

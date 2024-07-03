@@ -1,3 +1,3 @@
-import json
-data = json.loads({"name":"Alice", "age" : 30})
-print(data["name"])     
+def __init__(self):
+    self.name = name
+    self.value = value
